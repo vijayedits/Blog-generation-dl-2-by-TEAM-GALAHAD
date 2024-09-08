@@ -1,0 +1,15 @@
+import math
+filename="articleSet.csv"
+fields=['title','summary','content']
+with open(filename,'a') as csvfile:
+    csvwriter=csv.writer(csvfile)
+    
+    csvwriter.writerow(fields)
+    
+    def callback(row):
+        summary=generateSummary(row['text'])
+        if(type(summary)!=str):
+            return
+        rows=[row['title'],summary,row['text']]
+        csvwriter.writerow(rows)
+    df.apply(callback,axis=1)
