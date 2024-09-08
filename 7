@@ -1,0 +1,30 @@
+count = 0
+def generateSummary(blog):
+    global count
+    count+=1
+    print("Summarising blog ", count)
+    try:
+        sentences=sent_tokenize(sample_blog)
+        sentences_clean=[re.sub(r'[^\W\s]','', sentence.lower()) for sentence in sentences]
+        stop_words = stopwords.words('english')
+        sentence_tokens =[[words for words in sentence.split(' ') if words not in stop_words] for sentence in sentences_clean]
+        w2v=Word2Vec(sentence_tokens, vector_size=1,min_count=1, epochs=1000)
+        sentence_embeddings=[[w2v.wv.get_vector(word)[0] for word in words] for words in sentence_tokens]
+        max_len=max([len(tokens) for tokens in sentence_tokens])
+        sentence_embeddings=[np.pad(embedding, (0, max_len-len (embedding)), 'constant') for embedding in sentence_embeddings]
+        similarity_matrix =np.zeros([len (sentence_tokens), len(sentence_tokens)])
+        for i, row_embedding in enumerate (sentence_embeddings): 
+            for j,column_embedding in enumerate (sentence_embeddings):
+                similarity_matrix[i][j]=1-spatial.distance.cosine(row_embedding,column_embedding)
+        nx_graph=nx.from_numpy_array(similarity_matrix)
+        scores= nx.pagerank(nx_graph, max_iter=600)
+        top_sentence= {sentence:scores[index] for index, sentence in enumerate (sentences)}
+        sentNeeded = round(0.25*len(sentences))- 1
+        top=dict(sorted (top_sentence.items(), key=lambda x: x[1], reverse=True) [:sentNeeded])
+        summary=""
+        for sent in sentences:
+            if sent in top.keys():
+                      summary+=sent
+        return summary
+    except:
+        return float("NaN")
