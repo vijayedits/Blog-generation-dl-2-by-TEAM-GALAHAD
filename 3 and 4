@@ -1,0 +1,4 @@
+df['text']=df['text'].str.replace('\n','<|n|>')
+
+sample_blog=df['text'][10]
+print(sample_blog)
