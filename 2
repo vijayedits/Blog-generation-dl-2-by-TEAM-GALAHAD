@@ -1,2 +1,7 @@
 df=pd.read_csv('/kaggle/input/medium-articles/medium_articles.csv')
 df.head()
+
+df=df[['title','text']]
+df.shape
+df=df.drop_duplicates()
+df.shape
